@@ -1,0 +1,24 @@
+{
+    "cells": [
+        {
+            "language": "typescript",
+            "source": [
+                "import { fromIni } from '@aws-sdk/credential-providers';\nimport { S3Client, GetObjectCommand, GetObjectCommandInput } from '@aws-sdk/client-s3';\nimport { text, json } from 'stream/consumers';\n\n\nconst client = new S3Client({\n  region: 'us-east-1',\n  credentials: fromIni({profile: 'default'}),\n});\n\nconst handler = async() => {\n  try {\n    const inputJson: GetObjectCommandInput = {\n      Bucket: 'marcio-s3-playground',\n      Key: 'teste.json',\n    };\n\n    const resultJson = await client.send(new GetObjectCommand(inputJson));\n    const dataJson = await json(resultJson.Body);\n    console.log(dataJson);\n\n    const inputTxt: GetObjectCommandInput = {\n      Bucket: 'marcio-s3-playground',\n      Key: 'teste.txt',\n    };\n\n    const resultTxt = await client.send(new GetObjectCommand(inputTxt));\n    const dataTxt = await text(resultTxt.Body);\n    console.log(dataTxt);\n  } catch(err) {\n    console.log(err);\n  }\n}\n\nhandler();"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "{ 'editor.snippetSuggestions': 'none' }",
+                                "Texto qualquer",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
